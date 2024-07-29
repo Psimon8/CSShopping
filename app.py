@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from apex_chart_component import st_apex_charts
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -39,6 +38,28 @@ def calculate_completion_rate(df, attributes):
     if attributes:
         return (df[attributes].notna().mean() * 100).tolist()
     return []
+
+# Fonction pour générer le code HTML du graphique ApexCharts
+def st_apex_charts(chart_data):
+    chart_html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    </head>
+    <body>
+        <div id="chart"></div>
+        <script>
+            var options = {chart_data};
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+        </script>
+    </body>
+    </html>
+    """
+    st.components.v1.html(chart_html, height=600)
 
 st.title('Audit de Listing Shopping')
 
