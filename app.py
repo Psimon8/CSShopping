@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import requests
-from io import StringIO
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -24,23 +22,22 @@ recommended_attributes = {
     "Health & Beauty": ["mpn", "size", "color", "material", "pattern"],
 }
 
+# Correspondances des catégories FR -> US
+category_mapping = {
+    "Vêtements & Accessoires": "Apparel & Accessories",
+    "Livres": "Books",
+    "Médias": "Media",
+    "Appareils Électroniques": "Electronics",
+    "Mobilier": "Furniture",
+    "Alimentation & Boissons": "Food & Beverages",
+    "Santé & Beauté": "Health & Beauty",
+}
+
 # Fonction pour calculer le taux de complétion des attributs
 def calculate_completion_rate(df, attributes):
     return df[attributes].notna().mean() * 100
 
 st.title('Audit de Listing Shopping')
-
-# Charger le fichier des catégories FR/US depuis GitHub
-category_url = "https://github.com/Psimon8/CSShopping/blob/main/category_mapping.csv"
-
-try:
-    category_file = requests.get(category_url).content
-    category_df = pd.read_csv(StringIO(category_file.decode('utf-8')))
-    category_mapping = dict(zip(category_df['FR'], category_df['US']))
-    st.success("Le fichier de correspondance des catégories a été chargé avec succès.")
-except Exception as e:
-    st.error(f"Erreur lors du chargement du fichier de correspondance des catégories : {e}")
-    category_mapping = {}
 
 # Charger le fichier de listing
 uploaded_file = st.file_uploader("Importer un fichier de listing CSV ou XLSX", type=["csv", "xlsx"])
@@ -59,7 +56,7 @@ if uploaded_file:
         # Sélectionner la catégorie de produit FR pour l'audit
         category_fr = st.selectbox("Sélectionner la catégorie de produit (FR)", list(category_mapping.keys()))
 
-        if category_fr and category_mapping:
+        if category_fr:
             category_us = category_mapping[category_fr]
             required = required_attributes.get(category_us, [])
             recommended = recommended_attributes.get(category_us, [])
