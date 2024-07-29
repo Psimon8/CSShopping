@@ -31,7 +31,7 @@ def calculate_completion_rate(df, attributes):
 st.title('Audit de Listing Shopping')
 
 # Charger le fichier des catégories FR/US depuis GitHub
-category_url = "https://raw.githubusercontent.com/yourusername/yourrepository/main/category_mapping.csv"
+category_url = "category_mapping.csv"
 category_file = requests.get(category_url).content
 category_df = pd.read_csv(StringIO(category_file.decode('utf-8')))
 category_mapping = dict(zip(category_df['FR'], category_df['US']))
