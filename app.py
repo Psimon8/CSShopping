@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from streamlit_apex_charts import st_apex_charts
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -35,7 +36,9 @@ category_mapping = {
 
 # Fonction pour calculer le taux de complétion des attributs
 def calculate_completion_rate(df, attributes):
-    return df[attributes].notna().mean() * 100
+    if attributes:
+        return (df[attributes].notna().mean() * 100).tolist()
+    return []
 
 st.title('Audit de Listing Shopping')
 
@@ -65,20 +68,29 @@ if uploaded_file:
             st.write(f"Attributs recommandés pour {category_fr} ({category_us}): {recommended}")
 
             # Calculer le taux de complétion
-            if required:
-                required_completion_rate = calculate_completion_rate(df, required)
-                st.write("Taux de complétion des attributs obligatoires:")
-                st.write(required_completion_rate)
-                st.write("Progression des attributs obligatoires:")
-                for attr, rate in zip(required, required_completion_rate):
-                    st.progress(int(rate))
+            required_completion_rate = calculate_completion_rate(df, required)
+            recommended_completion_rate = calculate_completion_rate(df, recommended)
 
-            if recommended:
-                recommended_completion_rate = calculate_completion_rate(df, recommended)
-                st.write("Taux de complétion des attributs recommandés:")
-                st.write(recommended_completion_rate)
-                st.write("Progression des attributs recommandés:")
-                for attr, rate in zip(recommended, recommended_completion_rate):
-                    st.progress(int(rate))
+            # Afficher les taux de complétion sous forme de graphique
+            chart_data = {
+                "chart": {
+                    "type": "bar"
+                },
+                "series": [
+                    {
+                        "name": "Obligatoires",
+                        "data": required_completion_rate
+                    },
+                    {
+                        "name": "Recommandés",
+                        "data": recommended_completion_rate
+                    }
+                ],
+                "xaxis": {
+                    "categories": required + recommended
+                }
+            }
+            
+            st_apex_charts(chart_data)
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier de listing : {e}")
