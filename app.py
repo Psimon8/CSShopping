@@ -32,47 +32,56 @@ st.title('Audit de Listing Shopping')
 
 # Charger le fichier des catégories FR/US depuis GitHub
 category_url = "https://github.com/Psimon8/CSShopping/blob/main/category_mapping.csv"
-category_file = requests.get(category_url).content
-category_df = pd.read_csv(StringIO(category_file.decode('utf-8')))
-category_mapping = dict(zip(category_df['FR'], category_df['US']))
+
+try:
+    category_file = requests.get(category_url).content
+    category_df = pd.read_csv(StringIO(category_file.decode('utf-8')))
+    category_mapping = dict(zip(category_df['FR'], category_df['US']))
+    st.success("Le fichier de correspondance des catégories a été chargé avec succès.")
+except Exception as e:
+    st.error(f"Erreur lors du chargement du fichier de correspondance des catégories : {e}")
+    category_mapping = {}
 
 # Charger le fichier de listing
 uploaded_file = st.file_uploader("Importer un fichier de listing CSV ou XLSX", type=["csv", "xlsx"])
 
 if uploaded_file:
-    # Lire le fichier en fonction de son type
-    if uploaded_file.name.endswith('.csv'):
-        df = pd.read_csv(uploaded_file)
-    else:
-        df = pd.read_excel(uploaded_file)
+    try:
+        # Lire le fichier en fonction de son type
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
 
-    st.write("Aperçu des données importées:")
-    st.write(df.head())
+        st.write("Aperçu des données importées:")
+        st.write(df.head())
 
-    # Sélectionner la catégorie de produit FR pour l'audit
-    category_fr = st.selectbox("Sélectionner la catégorie de produit (FR)", list(category_mapping.keys()))
+        # Sélectionner la catégorie de produit FR pour l'audit
+        category_fr = st.selectbox("Sélectionner la catégorie de produit (FR)", list(category_mapping.keys()))
 
-    if category_fr and category_mapping:
-        category_us = category_mapping[category_fr]
-        required = required_attributes.get(category_us, [])
-        recommended = recommended_attributes.get(category_us, [])
-        
-        st.write(f"Attributs obligatoires pour {category_fr} ({category_us}): {required}")
-        st.write(f"Attributs recommandés pour {category_fr} ({category_us}): {recommended}")
+        if category_fr and category_mapping:
+            category_us = category_mapping[category_fr]
+            required = required_attributes.get(category_us, [])
+            recommended = recommended_attributes.get(category_us, [])
+            
+            st.write(f"Attributs obligatoires pour {category_fr} ({category_us}): {required}")
+            st.write(f"Attributs recommandés pour {category_fr} ({category_us}): {recommended}")
 
-        # Calculer le taux de complétion
-        if required:
-            required_completion_rate = calculate_completion_rate(df, required)
-            st.write("Taux de complétion des attributs obligatoires:")
-            st.write(required_completion_rate)
-            st.write("Progression des attributs obligatoires:")
-            for attr, rate in zip(required, required_completion_rate):
-                st.progress(int(rate))
+            # Calculer le taux de complétion
+            if required:
+                required_completion_rate = calculate_completion_rate(df, required)
+                st.write("Taux de complétion des attributs obligatoires:")
+                st.write(required_completion_rate)
+                st.write("Progression des attributs obligatoires:")
+                for attr, rate in zip(required, required_completion_rate):
+                    st.progress(int(rate))
 
-        if recommended:
-            recommended_completion_rate = calculate_completion_rate(df, recommended)
-            st.write("Taux de complétion des attributs recommandés:")
-            st.write(recommended_completion_rate)
-            st.write("Progression des attributs recommandés:")
-            for attr, rate in zip(recommended, recommended_completion_rate):
-                st.progress(int(rate))
+            if recommended:
+                recommended_completion_rate = calculate_completion_rate(df, recommended)
+                st.write("Taux de complétion des attributs recommandés:")
+                st.write(recommended_completion_rate)
+                st.write("Progression des attributs recommandés:")
+                for attr, rate in zip(recommended, recommended_completion_rate):
+                    st.progress(int(rate))
+    except Exception as e:
+        st.error(f"Erreur lors du chargement du fichier de listing : {e}")
