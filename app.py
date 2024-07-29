@@ -31,7 +31,7 @@ def calculate_completion_rate(df, attributes):
 st.title('Audit de Listing Shopping')
 
 # Charger le fichier des catégories FR/US depuis GitHub
-category_url = "https://github.com/Psimon8/CSShopping/category_mapping.csv"
+category_url = "https://github.com/Psimon8/CSShopping/blob/main/category_mapping.csv"
 
 try:
     category_file = requests.get(category_url).content
