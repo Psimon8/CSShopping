@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from streamlit_apex_charts import st_apex_charts
+from apex_chart_component import st_apex_charts
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -71,7 +71,7 @@ if uploaded_file:
             required_completion_rate = calculate_completion_rate(df, required)
             recommended_completion_rate = calculate_completion_rate(df, recommended)
 
-            # Afficher les taux de complétion sous forme de graphique
+            # Préparer les données pour ApexCharts
             chart_data = {
                 "chart": {
                     "type": "bar"
@@ -91,6 +91,7 @@ if uploaded_file:
                 }
             }
             
+            # Afficher le graphique avec ApexCharts
             st_apex_charts(chart_data)
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier de listing : {e}")
