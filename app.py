@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import requests
+from io import StringIO
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -28,13 +30,11 @@ def calculate_completion_rate(df, attributes):
 
 st.title('Audit de Listing Shopping')
 
-# Charger le fichier des catégories FR/US
-category_file = st.file_uploader("Importer le fichier de correspondance des catégories FR/US (XLSX)", type=["xlsx"])
-category_mapping = None
-
-if category_file:
-    category_df = pd.read_excel(category_file)
-    category_mapping = dict(zip(category_df['FR'], category_df['US']))
+# Charger le fichier des catégories FR/US depuis GitHub
+category_url = "https://raw.githubusercontent.com/yourusername/yourrepository/main/category_mapping.csv"
+category_file = requests.get(category_url).content
+category_df = pd.read_csv(StringIO(category_file.decode('utf-8')))
+category_mapping = dict(zip(category_df['FR'], category_df['US']))
 
 # Charger le fichier de listing
 uploaded_file = st.file_uploader("Importer un fichier de listing CSV ou XLSX", type=["csv", "xlsx"])
