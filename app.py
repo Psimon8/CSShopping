@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import requests
+import xml.etree.ElementTree as ET
 
 # Définir les attributs obligatoires et recommandés par catégorie de produit US
 required_attributes = {
@@ -61,6 +63,39 @@ def st_apex_charts(chart_data):
     """
     st.components.v1.html(chart_html, height=600)
 
+# Fonction pour importer ou ajouter une URL contenant un fichier XML
+def import_xml(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return ET.fromstring(response.content)
+    else:
+        raise Exception("Erreur lors de l'importation du fichier XML")
+
+# Fonction pour charger et analyser le fichier XML
+def parse_xml(xml_root):
+    data = []
+    for item in xml_root.findall('.//item'):
+        item_data = {}
+        for child in item:
+            item_data[child.tag] = child.text
+        data.append(item_data)
+    return pd.DataFrame(data)
+
+# Fonction pour vérifier la conformité du flux XML
+def check_compliance(df, categories):
+    compliance_report = {}
+    for category in categories.keys():
+        compliance_report[category] = df['category'].str.contains(category).sum()
+    return compliance_report
+
+# Fonction pour proposer des améliorations
+def suggest_improvements(compliance_report):
+    improvements = {}
+    for category, count in compliance_report.items():
+        if count == 0:
+            improvements[category] = "Ajouter des éléments dans la catégorie " + category
+    return improvements
+
 st.title('Audit de Listing Shopping')
 
 # Charger le fichier de listing
@@ -116,3 +151,13 @@ if uploaded_file:
             st_apex_charts(chart_data)
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier de listing : {e}")
+
+# Exemple d'utilisation
+url = "URL_DU_FICHIER_XML"
+xml_root = import_xml(url)
+df = parse_xml(xml_root)
+compliance_report = check_compliance(df, categories)
+improvements = suggest_improvements(compliance_report)
+
+print("Rapport de conformité:", compliance_report)
+print("Propositions d'améliorations:", improvements)
