@@ -162,6 +162,10 @@ if url:
         st.write("Aperçu des données XML importées:")
         st.write(df_xml.head())
 
+        # Compter le nombre d'items dans le flux XML
+        item_count = len(xml_root.findall('.//item'))
+        st.write(f"Nombre d'items dans le flux XML: {item_count}")
+
         compliance_report = check_compliance(df_xml, category_mapping)
         improvements = suggest_improvements(compliance_report)
 
