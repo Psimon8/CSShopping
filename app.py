@@ -30,12 +30,14 @@ if url:
     try:
         xml_root = import_xml(url)
         df_xml = parse_xml(xml_root)
-        st.write("Aperçu des données XML importées:")
-        st.write(df_xml.head())
 
-        # Compter le nombre d'items dans le flux XML
+         # Compter le nombre d'items dans le flux XML
         item_count = len(xml_root.findall('.//item'))
         st.write(f"Nombre d'items dans le flux XML: {item_count}")
 
+        st.write("Aperçu des données XML importées:")
+        st.write(df_xml.head())
+
+    
     except Exception as e:
         st.error(f"Erreur lors de l'importation du fichier XML: {e}")
