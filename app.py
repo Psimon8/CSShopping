@@ -20,7 +20,9 @@ def parse_xml(xml_root):
     for item in xml_root.findall('.//item'):
         item_data = {}
         for child in item:
-            item_data[child.tag] = child.text
+            # Remplacer les deux-points dans les noms de balises par des underscores
+            tag = child.tag.replace('{http://base.google.com/ns/1.0}', 'g:')
+            item_data[tag] = child.text
         data.append(item_data)
     return pd.DataFrame(data)
 
@@ -61,7 +63,7 @@ if url:
         st.write("Aperçu des données XML importées:")
         st.write(df_xml.head())
 
-        # Afficher le nombre d'items dans les différentes catégories
+        # Afficher le nombre d'items dans les différentes cat��gories
         category_counts = df_xml['g:google_product_category'].value_counts()
         st.write("Nombre d'items par catégorie:")
 
