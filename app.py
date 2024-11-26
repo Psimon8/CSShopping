@@ -29,13 +29,14 @@ def parse_xml(xml_root):
 # Fonction pour charger le fichier XLSX contenant les catégories
 def load_categories(url):
     df = pd.read_excel(url, usecols="A:C")
+    df.columns = ['Category_Name', 'B', 'ID_CAT']  # Renommer les colonnes pour correspondre aux libellés
     return df
 
-# Fonction pour trouver la correspondance exacte dans la colonne C et afficher la valeur de la colonne A
+# Fonction pour trouver la correspondance exacte dans la colonne ID_CAT et afficher la valeur de la colonne Category_Name
 def find_category_value(df, category):
-    match = df[df['C'] == category]
+    match = df[df['ID_CAT'] == category]
     if not match.empty:
-        return match['A'].values[0]
+        return match['Category_Name'].values[0]
     else:
         return None
 
