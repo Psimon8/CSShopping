@@ -152,12 +152,21 @@ if uploaded_file:
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier de listing : {e}")
 
-# Exemple d'utilisation
-url = "URL_DU_FICHIER_XML"
-xml_root = import_xml(url)
-df = parse_xml(xml_root)
-compliance_report = check_compliance(df, categories)
-improvements = suggest_improvements(compliance_report)
+# Ajouter une URL contenant un fichier XML
+url = st.text_input("Entrer l'URL du fichier XML")
 
-print("Rapport de conformité:", compliance_report)
-print("Propositions d'améliorations:", improvements)
+if url:
+    try:
+        xml_root = import_xml(url)
+        df_xml = parse_xml(xml_root)
+        st.write("Aperçu des données XML importées:")
+        st.write(df_xml.head())
+
+        compliance_report = check_compliance(df_xml, category_mapping)
+        improvements = suggest_improvements(compliance_report)
+
+        st.write("Rapport de conformité:", compliance_report)
+        st.write("Propositions d'améliorations:", improvements)
+
+    except Exception as e:
+        st.error(f"Erreur lors de l'importation du fichier XML: {e}")
