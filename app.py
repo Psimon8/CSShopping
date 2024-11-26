@@ -34,7 +34,7 @@ def load_categories(url):
 
 # Fonction pour trouver la correspondance exacte dans la colonne ID_CAT et afficher la valeur de la colonne Category_Name
 def find_category_value(df, category):
-    match = df[df['ID_CAT'] == category]
+    match = df[df['ID_CAT'].astype(str) == str(category)]
     if not match.empty:
         return match['Category_Name'].values[0]
     else:
