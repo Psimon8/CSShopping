@@ -70,9 +70,9 @@ if url:
         for category, count in category_counts.items():
             category_value = find_category_value(categories_df, category)
             if category_value:
-                st.write(f"{category_value}: {count}")
+                st.write(f"{category}: {count} items - {category_value}")
             else:
-                st.write(f"{category}: {count} (Catégorie non trouvée dans le fichier XLSX)")
+                st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
 
     except Exception as e:
         st.error(f"Erreur lors de l'importation du fichier XML: {e}")
