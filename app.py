@@ -3,6 +3,9 @@ import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
 
+# URL du fichier XLSX dans le dépôt GitHub
+xlsx_url = "https://raw.githubusercontent.com/Psimon8/CSShopping/main/CSS_CAT_FR_US.xlsx"
+
 # Fonction pour importer ou ajouter une URL contenant un fichier XML
 def import_xml(url):
     response = requests.get(url)
@@ -22,8 +25,8 @@ def parse_xml(xml_root):
     return pd.DataFrame(data)
 
 # Fonction pour charger le fichier XLSX contenant les catégories
-def load_categories(file_path):
-    df = pd.read_excel(file_path, usecols="A:C")
+def load_categories(url):
+    df = pd.read_excel(url, usecols="A:C")
     return df
 
 # Fonction pour trouver la correspondance exacte dans la colonne C et afficher la valeur de la colonne A
@@ -36,20 +39,17 @@ def find_category_value(df, category):
 
 st.title('Audit de Listing Shopping')
 
-# Charger le fichier de catégories
-uploaded_file = st.file_uploader("Importer le fichier de catégories XLSX", type=["xlsx"])
-
-if uploaded_file:
-    try:
-        categories_df = load_categories(uploaded_file)
-        st.write("Fichier de catégories chargé avec succès.")
-    except Exception as e:
-        st.error(f"Erreur lors de l'importation du fichier de catégories: {e}")
+# Charger le fichier de catégories depuis GitHub
+try:
+    categories_df = load_categories(xlsx_url)
+    st.write("Fichier de catégories chargé avec succès.")
+except Exception as e:
+    st.error(f"Erreur lors de l'importation du fichier de catégories: {e}")
 
 # Ajouter une URL contenant un fichier XML
 url = st.text_input("Entrer l'URL du fichier XML")
 
-if url and uploaded_file:
+if url:
     try:
         xml_root = import_xml(url)
         df_xml = parse_xml(xml_root)
