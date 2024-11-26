@@ -63,7 +63,7 @@ if url:
         st.write("Aperçu des données XML importées:")
         st.write(df_xml.head())
 
-        # Afficher le nombre d'items dans les différentes cat��gories
+        # Afficher le nombre d'items dans les différentes catégories
         category_counts = df_xml['g:google_product_category'].value_counts()
         st.write("Nombre d'items par catégorie:")
 
