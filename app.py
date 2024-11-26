@@ -61,9 +61,6 @@ if url:
         item_count = len(xml_root.findall('.//item'))
         st.write(f"Nombre d'items dans le flux XML: {item_count}")
 
-        st.write("Aperçu des données XML importées:")
-        st.write(df_xml.head())
-
         # Afficher le nombre d'items dans les différentes catégories
         category_counts = df_xml['g:google_product_category'].value_counts()
         st.write("Nombre d'items par catégorie:")
@@ -74,6 +71,9 @@ if url:
                 st.write(f"{category}: {count} items - {category_value}")
             else:
                 st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
+
+        st.write("Aperçu des données XML importées:")
+        st.write(df_xml.head())
 
     except Exception as e:
         st.error(f"Erreur lors de l'importation du fichier XML: {e}")
