@@ -152,7 +152,7 @@ with col4:
 if sitemap_url and url:
     try:
         sitemap_urls = extract_sitemap_urls(sitemap_root)
-        xml_urls = df_xml['link'].tolist()  # Assurez-vous que la colonne 'g:link' contient les URLs des produits dans le flux XML
+        xml_urls = df_xml['g:link'].tolist() if 'g:link' in df_xml.columns else df_xml['link'].tolist()
 
         # Trouver les URLs des produits qui ne sont pas disponibles dans le flux XML
         missing_urls = [url for url in sitemap_urls if url not in xml_urls]
