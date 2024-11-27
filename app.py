@@ -58,7 +58,7 @@ def load_categories(url):
 
 # Fonction pour charger le fichier Google Merchant Center Attributes
 def load_attributes(url):
-    df = pd.read_excel(url, usecols="C:D")
+    df = pd.read_excel(url, usecols="C:D", skiprows=1)  # Ignorer la première ligne
     df.columns = ['Attribute', 'Mandatory']  # Renommer les colonnes pour correspondre aux libellés
     return df
 
