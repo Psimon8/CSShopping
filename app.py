@@ -171,7 +171,7 @@ if sitemap_url and url:
 if url:
     try:
         mandatory_attributes = attributes_df[attributes_df['Mandatory'] == 'Yes']['Attribute'].tolist()
-        attribute_counts = {attr: df_xml[attr].notna().sum() for attr in mandatory_attributes}
+        attribute_counts = {attr: df_xml[attr].notna().sum() if attr in df_xml.columns else 0 for attr in mandatory_attributes}
         st.write("Vérification des attributs obligatoires:")
         for attr, count in attribute_counts.items():
             percentage = (count / item_count) * 100
@@ -180,9 +180,11 @@ if url:
         st.error(f"Erreur lors de la vérification des attributs obligatoires: {e}")
 
     # Compter le nombre d'items qui contiennent <g:id>
-    if url:
-        try:
+    try:
+        if 'g:id' in df_xml.columns:
             id_count = df_xml['g:id'].notna().sum()
             st.write(f"Nombre d'items contenant <g:id>: {id_count}")
-        except Exception as e:
-            st.error(f"Erreur lors du comptage des items contenant <g:id>: {e}")
+        else:
+            st.write("La colonne 'g:id' n'existe pas dans le fichier XML importé.")
+    except Exception as e:
+        st.error(f"Erreur lors du comptage des items contenant <g:id>: {e}")
