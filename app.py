@@ -188,7 +188,7 @@ if sitemap_url and url:
     except Exception as e:
         st.error(f"Erreur lors du comptage des items contenant <g:title>: {e}")    
     
-    # Compter le nombre d'items qui contiennent <g:title>
+    # Compter le nombre d'items qui contiennent <g:gender>
     try:
         if 'g:gender' in df_xml.columns:
             title_count = df_xml['g:gender'].notna().sum()
