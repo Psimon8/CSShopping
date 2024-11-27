@@ -68,28 +68,32 @@ if url:
         item_count = len(xml_root.findall('.//item'))
         st.write(f"Nombre d'items dans le flux XML: {item_count}")
 
-        # Afficher le nombre d'items dans les différentes catégories
-        category_counts = df_xml['g:google_product_category'].value_counts()
+        # Vérifier si la colonne 'g:google_product_category' existe dans le DataFrame
+        if 'g:google_product_category' in df_xml.columns:
+            # Afficher le nombre d'items dans les différentes catégories
+            category_counts = df_xml['g:google_product_category'].value_counts()
 
-        # Diviser l'affichage en deux colonnes
-        col1, col2 = st.columns(2)
+            # Diviser l'affichage en deux colonnes
+            col1, col2 = st.columns(2)
 
-        with col1:
-            st.write("Nombre d'items par catégorie:")
-            for category, count in category_counts.items():
-                category_value = find_category_value(categories_df, category)
-                if category_value:
-                    st.write(f"{category}: {count} items - {category_value}")
-                else:
-                    st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
+            with col1:
+                st.write("Nombre d'items par catégorie:")
+                for category, count in category_counts.items():
+                    category_value = find_category_value(categories_df, category)
+                    if category_value:
+                        st.write(f"{category}: {count} items - {category_value}")
+                    else:
+                        st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
 
-        with col2:
-            st.write("Diagramme des catégories:")
-            chart_data = pd.DataFrame({
-                'Catégorie': category_counts.index,
-                'Nombre d items': category_counts.values
-            })
-            st.bar_chart(chart_data.set_index('Catégorie'))
+            with col2:
+                st.write("Diagramme des catégories:")
+                chart_data = pd.DataFrame({
+                    'Catégorie': category_counts.index,
+                    'Nombre_d_items': category_counts.values
+                })
+                st.bar_chart(chart_data.set_index('Catégorie'))
+        else:
+            st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
 
         st.write("Aperçu des données XML importées:")
         st.write(df_xml.head())
