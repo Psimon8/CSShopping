@@ -70,6 +70,15 @@ except Exception as e:
 
 # Ajouter une URL contenant un fichier XML
 url = st.text_input("Entrer l'URL du fichier XML")
+sitemap_url = st.text_input("Entrer l'URL du sitemap produit")
+
+if sitemap_url:
+    try:
+        sitemap_root = import_sitemap(sitemap_url)
+        product_count = count_sitemap_products(sitemap_root)
+        st.write(f"Nombre de produits dans le sitemap: {product_count}")
+    except Exception as e:
+        st.error(f"Erreur lors de l'importation du sitemap produit: {e}")
 
 if url:
     try:
