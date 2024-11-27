@@ -114,4 +114,4 @@ with col2:
             st.error(f"Erreur lors de l'analyse des catégories: {e}")
 
 st.write("Aperçu des données XML importées:")
-st.write(df_xml.head())
+st.write(df_xml.head(20))
