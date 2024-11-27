@@ -167,7 +167,7 @@ if sitemap_url and url:
     except Exception as e:
         st.error(f"Erreur lors de l'extraction des URLs des produits: {e}")
 
-    # Compter le nombre d'items qui contiennent <g:id>
+# Compter le nombre d'items qui contiennent <g:id>
     try:
         if 'g:id' in df_xml.columns:
             id_count = df_xml['g:id'].notna().sum()
@@ -177,12 +177,12 @@ if sitemap_url and url:
     except Exception as e:
         st.error(f"Erreur lors du comptage des items contenant <g:id>: {e}")
     
-    # Compter le nombre d'items qui contiennent <title>
+    # Compter le nombre d'items qui contiennent <g:title>
     try:
-        if 'g:id' in df_xml.columns:
-            id_count = df_xml['<title>'].notna().sum()
-            st.write(f"Nombre d'items contenant <Title>: {id_count}")
+        if 'g:title' in df_xml.columns:
+            title_count = df_xml['g:title'].notna().sum()
+            st.write(f"Nombre d'items contenant <g:title>: {title_count}")
         else:
-            st.write("La colonne 'Title' n'existe pas dans le fichier XML importé.")
+            st.write("La colonne 'g:title' n'existe pas dans le fichier XML importé.")
     except Exception as e:
-        st.error(f"Erreur lors du comptage des items contenant <Title>: {e}")    
+        st.error(f"Erreur lors du comptage des items contenant <g:title>: {e}")    
