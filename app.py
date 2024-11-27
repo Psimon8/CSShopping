@@ -135,7 +135,6 @@ if sitemap_url and url:
         st.write(f"Nombre d'URLs des produits non disponibles dans le flux XML: {len(filtered_missing_urls)}")
         st.write("URLs des produits non disponibles dans le flux XML:")
         st.write(pd.DataFrame(filtered_missing_urls, columns=["URL"]))
-        st.write(pd.DataFrame(missing_urls, columns=["URL"]))
-
+        
     except Exception as e:
         st.error(f"Erreur lors de l'extraction des URLs des produits: {e}")
