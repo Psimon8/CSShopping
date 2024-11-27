@@ -25,6 +25,10 @@ def import_sitemap(url):
 def count_sitemap_products(xml_root):
     return len(xml_root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc'))
 
+# Fonction pour extraire les URLs des produits du sitemap XML
+def extract_sitemap_urls(xml_root):
+    return [loc.text for loc in xml_root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+
 # Fonction pour importer ou ajouter une URL contenant un fichier XML flux shopping
 def import_xml(url):
     response = requests.get(url)
@@ -115,3 +119,18 @@ with col2:
 
 st.write("Aperçu des données XML importées:")
 st.write(df_xml.head(20))
+
+# Extraire les URLs des produits du sitemap XML
+if sitemap_url and url:
+    try:
+        sitemap_urls = extract_sitemap_urls(sitemap_root)
+        xml_urls = df_xml['g:link'].tolist()  # Assurez-vous que la colonne 'g:link' contient les URLs des produits dans le flux XML
+
+        # Trouver les URLs des produits qui ne sont pas disponibles dans le flux XML
+        missing_urls = [url for url in sitemap_urls if url not in xml_urls]
+
+        st.write("URLs des produits non disponibles dans le flux XML:")
+        st.write(pd.DataFrame(missing_urls, columns=["URL"]))
+
+    except Exception as e:
+        st.error(f"Erreur lors de l'extraction des URLs des produits: {e}")
