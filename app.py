@@ -87,7 +87,7 @@ if url:
             st.write("Diagramme des catégories:")
             chart_data = pd.DataFrame({
                 'Catégorie': category_counts.index,
-                'Nombre d\'items': category_counts.values
+                'Nombre d items': category_counts.values
             })
             st.bar_chart(chart_data.set_index('Catégorie'))
 
