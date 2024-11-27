@@ -113,5 +113,5 @@ with col2:
         except Exception as e:
             st.error(f"Erreur lors de l'analyse des catégories: {e}")
 
-        st.write("Aperçu des données XML importées:")
-    st.write(df_xml.head())
+st.write("Aperçu des données XML importées:")
+st.write(df_xml.head())
