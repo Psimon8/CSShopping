@@ -63,7 +63,7 @@ def find_category_value(df, category):
     else:
         return None
 
-st.title('Audit de Listing Shopping')
+st.title('🍧 Audit de Listing Shopping')
 
 # Charger le fichier de catégories depuis GitHub
 try:
