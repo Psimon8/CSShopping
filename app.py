@@ -178,3 +178,11 @@ if url:
             st.write(f"{attr}: {count}/{item_count} - {percentage:.2f}%")
     except Exception as e:
         st.error(f"Erreur lors de la vérification des attributs obligatoires: {e}")
+
+    # Compter le nombre d'items qui contiennent <g:id>
+    if url:
+        try:
+            id_count = df_xml['g:id'].notna().sum()
+            st.write(f"Nombre d'items contenant <g:id>: {id_count}")
+        except Exception as e:
+            st.error(f"Erreur lors du comptage des items contenant <g:id>: {e}")
