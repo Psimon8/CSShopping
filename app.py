@@ -13,7 +13,19 @@ st.set_page_config(
 # URL du fichier XLSX dans le dépôt GitHub
 xlsx_url = "https://raw.githubusercontent.com/Psimon8/CSShopping/main/CSS_CAT_FR_US.xlsx"
 
-# Fonction pour importer ou ajouter une URL contenant un fichier XML
+# Fonction pour importer et analyser le sitemap product XML
+def import_sitemap(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return ET.fromstring(response.content)
+    else:
+        raise Exception("Erreur lors de l'importation du sitemap XML")
+
+# Fonction pour compter le nombre de produits dans le sitemap XML
+def count_sitemap_products(xml_root):
+    return len(xml_root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc'))
+
+# Fonction pour importer ou ajouter une URL contenant un fichier XML flux shopping
 def import_xml(url):
     response = requests.get(url)
     if response.status_code == 200:
