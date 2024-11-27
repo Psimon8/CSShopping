@@ -3,14 +3,12 @@ import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
 
-
 # Configuration de la page Streamlit
 st.set_page_config(
     layout="wide",
     page_title="CSS Flux Audit",
     page_icon="🍧"
 )
-
 
 # URL du fichier XLSX dans le dépôt GitHub
 xlsx_url = "https://raw.githubusercontent.com/Psimon8/CSShopping/main/CSS_CAT_FR_US.xlsx"
