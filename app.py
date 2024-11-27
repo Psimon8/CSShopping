@@ -130,7 +130,6 @@ with col4:
 
         # Filtrer le DataFrame en fonction de la catégorie sélectionnée
         filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category] if selected_category != "-" else df_xml
-        st.write(f"Aperçu des données XML importées pour la catégorie sélectionnée ({selected_category}):")
         st.write(filtered_df.head(20))
     else:
         st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
