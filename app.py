@@ -179,8 +179,8 @@ if sitemap_url and url:
     
     # Compter le nombre d'items qui contiennent <g:title>
     try:
-        if 'g:title' in df_xml.columns:
-            title_count = df_xml['g:title'].notna().sum()
+        if 'title' in df_xml.columns:
+            title_count = df_xml['title'].notna().sum()
             st.write(f"Nombre d'items contenant <g:title>: {title_count}")
         else:
             st.write("La colonne 'g:title' n'existe pas dans le fichier XML importé.")
