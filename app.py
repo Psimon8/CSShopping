@@ -125,7 +125,7 @@ if 'g:google_product_category' in df_xml.columns:
     selected_category = st.selectbox("Sélectionner une catégorie de produit", unique_categories)
 
     # Filtrer le DataFrame en fonction de la catégorie sélectionnée
-    filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category]
+    filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category] if selected_category != "-" else df_xml
     st.write(f"Aperçu des données XML importées pour la catégorie sélectionnée ({selected_category}):")
     st.write(filtered_df.head(20))
 else:
