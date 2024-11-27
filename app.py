@@ -129,7 +129,12 @@ if sitemap_url and url:
         # Trouver les URLs des produits qui ne sont pas disponibles dans le flux XML
         missing_urls = [url for url in sitemap_urls if url not in xml_urls]
 
+        # Filtrer les URLs contenant exactement 3 "/"
+        filtered_missing_urls = [url for url in missing_urls if url.count('/') != 3]
+
+        st.write(f"Nombre d'URLs des produits non disponibles dans le flux XML: {len(filtered_missing_urls)}")
         st.write("URLs des produits non disponibles dans le flux XML:")
+        st.write(pd.DataFrame(filtered_missing_urls, columns=["URL"]))
         st.write(pd.DataFrame(missing_urls, columns=["URL"]))
 
     except Exception as e:
