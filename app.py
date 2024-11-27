@@ -68,36 +68,39 @@ try:
 except Exception as e:
     st.error(f"Erreur lors de l'importation du fichier de catégories: {e}")
 
-# Ajouter une URL contenant un fichier XML
-url = st.text_input("Entrer l'URL du fichier XML")
-sitemap_url = st.text_input("Entrer l'URL du sitemap produit")
+# Diviser l'affichage en deux colonnes
+col1, col2 = st.columns(2)
 
-if sitemap_url:
-    try:
-        sitemap_root = import_sitemap(sitemap_url)
-        product_count = count_sitemap_products(sitemap_root)
-        st.write(f"Nombre de produits dans le sitemap: {product_count}")
-    except Exception as e:
-        st.error(f"Erreur lors de l'importation du sitemap produit: {e}")
+with col1:
+    sitemap_url = st.text_input("Entrer l'URL du sitemap produit")
+    if sitemap_url:
+        try:
+            sitemap_root = import_sitemap(sitemap_url)
+            product_count = count_sitemap_products(sitemap_root)
+            st.write(f"Nombre de produits dans le sitemap: {product_count}")
+        except Exception as e:
+            st.error(f"Erreur lors de l'importation du sitemap produit: {e}")
 
-if url:
-    try:
-        xml_root = import_xml(url)
-        df_xml = parse_xml(xml_root)
+    url = st.text_input("Entrer l'URL du fichier XML")
+    if url:
+        try:
+            xml_root = import_xml(url)
+            df_xml = parse_xml(xml_root)
 
-        # Compter le nombre d'items dans le flux XML
-        item_count = len(xml_root.findall('.//item'))
-        st.write(f"Nombre d'items dans le flux XML: {item_count}")
+            # Compter le nombre d'items dans le flux XML
+            item_count = len(xml_root.findall('.//item'))
+            st.write(f"Nombre d'items dans le flux XML: {item_count}")
 
-        # Vérifier si la colonne 'g:google_product_category' existe dans le DataFrame
-        if 'g:google_product_category' in df_xml.columns:
-            # Afficher le nombre d'items dans les différentes catégories
-            category_counts = df_xml['g:google_product_category'].value_counts()
+        except Exception as e:
+            st.error(f"Erreur lors de l'importation du fichier XML: {e}")
 
-            # Diviser l'affichage en deux colonnes
-            col1, col2 = st.columns(2)
-
-            with col1:
+with col2:
+    if url:
+        try:
+            # Vérifier si la colonne 'g:google_product_category' existe dans le DataFrame
+            if 'g:google_product_category' in df_xml.columns:
+                # Afficher le nombre d'items dans les différentes catégories
+                category_counts = df_xml['g:google_product_category'].value_counts()
                 st.write("Nombre d'items par catégorie:")
                 for category, count in category_counts.items():
                     category_value = find_category_value(categories_df, category)
@@ -105,12 +108,10 @@ if url:
                         st.write(f"{category}: {count} items - {category_value}")
                     else:
                         st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
-
-        else:
-            st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
+            else:
+                st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
+        except Exception as e:
+            st.error(f"Erreur lors de l'analyse des catégories: {e}")
 
         st.write("Aperçu des données XML importées:")
-        st.write(df_xml.head())
-
-    except Exception as e:
-        st.error(f"Erreur lors de l'importation du fichier XML: {e}")
+    st.write(df_xml.head())
