@@ -12,6 +12,7 @@ st.set_page_config(
 
 # URL du fichier XLSX dans le dépôt GitHub
 xlsx_url = "https://raw.githubusercontent.com/Psimon8/CSShopping/main/CSS_CAT_FR_US.xlsx"
+attributes_url = "https://raw.githubusercontent.com/Psimon8/CSShopping/main/Google_Merchant_Center_Attributes.xlsx"
 
 # Fonction pour importer et analyser le sitemap product XML
 def import_sitemap(url):
@@ -55,6 +56,12 @@ def load_categories(url):
     df.columns = ['Category_Name', 'B', 'ID_CAT']  # Renommer les colonnes pour correspondre aux libellés
     return df
 
+# Fonction pour charger le fichier Google Merchant Center Attributes
+def load_attributes(url):
+    df = pd.read_excel(url, usecols="C:D")
+    df.columns = ['Attribute', 'Mandatory']  # Renommer les colonnes pour correspondre aux libellés
+    return df
+
 # Fonction pour trouver la correspondance exacte dans la colonne ID_CAT et afficher la valeur de la colonne Category_Name
 def find_category_value(df, category):
     match = df[df['ID_CAT'].astype(str) == str(category)]
@@ -71,6 +78,13 @@ try:
     st.write("Fichier de catégories chargé avec succès.")
 except Exception as e:
     st.error(f"Erreur lors de l'importation du fichier de catégories: {e}")
+
+# Charger le fichier Google Merchant Center Attributes depuis GitHub
+try:
+    attributes_df = load_attributes(attributes_url)
+    st.write("Fichier des attributs Google Merchant Center chargé avec succès.")
+except Exception as e:
+    st.error(f"Erreur lors de l'importation du fichier des attributs: {e}")
 
 # Diviser l'affichage en deux colonnes
 col1, col2 = st.columns(2)
@@ -138,7 +152,7 @@ with col4:
 if sitemap_url and url:
     try:
         sitemap_urls = extract_sitemap_urls(sitemap_root)
-        xml_urls = df_xml['link'].tolist()  # Assurez-vous que la colonne 'g:link' contient les URLs des produits dans le flux XML
+        xml_urls = df_xml['g:link'].tolist()  # Assurez-vous que la colonne 'g:link' contient les URLs des produits dans le flux XML
 
         # Trouver les URLs des produits qui ne sont pas disponibles dans le flux XML
         missing_urls = [url for url in sitemap_urls if url not in xml_urls]
@@ -152,3 +166,15 @@ if sitemap_url and url:
 
     except Exception as e:
         st.error(f"Erreur lors de l'extraction des URLs des produits: {e}")
+
+# Vérifier les attributs obligatoires
+if url:
+    try:
+        mandatory_attributes = attributes_df[attributes_df['Mandatory'] == 'Yes']['Attribute'].tolist()
+        attribute_counts = {attr: df_xml[attr].notna().sum() for attr in mandatory_attributes}
+        st.write("Vérification des attributs obligatoires:")
+        for attr, count in attribute_counts.items():
+            percentage = (count / item_count) * 100
+            st.write(f"{attr}: {count}/{item_count} - {percentage:.2f}%")
+    except Exception as e:
+        st.error(f"Erreur lors de la vérification des attributs obligatoires: {e}")
