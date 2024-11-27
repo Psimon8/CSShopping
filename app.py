@@ -117,19 +117,23 @@ with col2:
         except Exception as e:
             st.error(f"Erreur lors de l'analyse des catégories: {e}")
 
-st.write("Aperçu des données XML importées:")
-st.write(df_xml.head(20))
-# Ajouter un menu déroulant pour sélectionner une catégorie de produit
-if 'g:google_product_category' in df_xml.columns:
-    unique_categories = df_xml['g:google_product_category'].unique()
-    selected_category = st.selectbox("Sélectionner une catégorie de produit", unique_categories)
+col3, col4 = st.columns(2)
 
-    # Filtrer le DataFrame en fonction de la catégorie sélectionnée
-    filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category] if selected_category != "-" else df_xml
-    st.write(f"Aperçu des données XML importées pour la catégorie sélectionnée ({selected_category}):")
-    st.write(filtered_df.head(20))
-else:
-    st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
+with col3:
+    st.write("Aperçu des données XML importées:")
+    st.write(df_xml.head(20))
+
+with col4:
+    if 'g:google_product_category' in df_xml.columns:
+        unique_categories = df_xml['g:google_product_category'].unique()
+        selected_category = st.selectbox("Sélectionner une catégorie de produit", unique_categories)
+
+        # Filtrer le DataFrame en fonction de la catégorie sélectionnée
+        filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category] if selected_category != "-" else df_xml
+        st.write(f"Aperçu des données XML importées pour la catégorie sélectionnée ({selected_category}):")
+        st.write(filtered_df.head(20))
+    else:
+        st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
 
 # Extraire les URLs des produits du sitemap XML
 if sitemap_url and url:
