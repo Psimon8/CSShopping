@@ -85,13 +85,6 @@ if url:
                     else:
                         st.write(f"{category}: {count} items (Catégorie non trouvée dans le fichier XLSX)")
 
-            with col2:
-                st.write("Diagramme des catégories:")
-                chart_data = pd.DataFrame({
-                    'Catégorie': category_counts.index,
-                    'Nombre_d_items': category_counts.values
-                })
-                st.bar_chart(chart_data.set_index('Catégorie'))
         else:
             st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
 
