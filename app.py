@@ -119,6 +119,17 @@ with col2:
 
 st.write("Aperçu des données XML importées:")
 st.write(df_xml.head(20))
+# Ajouter un menu déroulant pour sélectionner une catégorie de produit
+if 'g:google_product_category' in df_xml.columns:
+    unique_categories = df_xml['g:google_product_category'].unique()
+    selected_category = st.selectbox("Sélectionner une catégorie de produit", unique_categories)
+
+    # Filtrer le DataFrame en fonction de la catégorie sélectionnée
+    filtered_df = df_xml[df_xml['g:google_product_category'] == selected_category]
+    st.write(f"Aperçu des données XML importées pour la catégorie sélectionnée ({selected_category}):")
+    st.write(filtered_df.head(20))
+else:
+    st.write("La colonne 'g:google_product_category' n'existe pas dans le fichier XML importé.")
 
 # Extraire les URLs des produits du sitemap XML
 if sitemap_url and url:
@@ -135,6 +146,6 @@ if sitemap_url and url:
         st.write(f"Nombre d'URLs des produits non disponibles dans le flux XML: {len(filtered_missing_urls)}")
         st.write("URLs des produits non disponibles dans le flux XML:")
         st.write(pd.DataFrame(filtered_missing_urls, columns=["URL"]))
-        
+
     except Exception as e:
         st.error(f"Erreur lors de l'extraction des URLs des produits: {e}")
